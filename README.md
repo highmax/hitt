@@ -1,2 +1,2 @@
 # hitt
-👷 (WIP) Personal training app to create hit routines
+👷 (WIP) Personal training app to create hit workout routines
