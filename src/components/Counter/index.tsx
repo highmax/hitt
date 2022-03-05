@@ -2,12 +2,14 @@ import EditButton from '../EditButton'
 import DeleteButton from '../DeleteButton'
 import DragButton from '../DragButton'
 
+import { Counter as CounterModel } from 'models/counter'
+
 type CounterProps = {
   title: string
   hours?: number
   minutes?: number
   seconds?: number
-  onEdit: (d: object) => void
+  onEdit: (d: CounterModel) => void
 }
 
 export default function Counter({
@@ -22,7 +24,7 @@ export default function Counter({
   }
 
   return (
-    <div className="inline-flex items-center py-3 px-5 mb-3 w-full text-base font-medium text-indigo-600 bg-white rounded-md border border-transparent shadow">
+    <div className="inline-flex items-center py-3 px-5 mb-3 last:mb-0 w-full text-base font-medium text-indigo-600 bg-white rounded-md border border-transparent shadow">
       <div className="mr-4 text-slate-300 cursor-grab">
         <DragButton />
       </div>

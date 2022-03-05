@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+
+import { Counter } from 'models/counter'
 import SaveButton from '../SaveButton'
 
 type CounterFormProps = {
   editMode: boolean
-  details?: { title: string; hours: number; minutes: number; seconds: number }
+  details?: Counter
+  saveCounter: (c: Counter) => void
 }
 
 // TODO: Recibir ID del Counter recien editado
@@ -16,13 +19,14 @@ export default function CounterForm({
     hours: 0,
     minutes: 0,
     seconds: 0
-  }
+  },
+  saveCounter
 }: CounterFormProps) {
-  const { title = '', hours, minutes, seconds } = details
-  const [counterTitle, setCounterTitle] = useState('')
-  const [counterHours, setCounterHours] = useState(0)
-  const [counterMinutes, setCounterMinutes] = useState(0)
-  const [counterSeconds, setCounterSeconds] = useState(0)
+  const { title, hours, minutes, seconds } = details
+  const [counterTitle, setCounterTitle] = useState<string>('')
+  const [counterHours, setCounterHours] = useState<number>(0)
+  const [counterMinutes, setCounterMinutes] = useState<number>(0)
+  const [counterSeconds, setCounterSeconds] = useState<number>(0)
 
   const titleRef = useRef<HTMLInputElement>(null)
   const hoursRef = useRef<HTMLInputElement>(null)
@@ -44,20 +48,30 @@ export default function CounterForm({
 
   //TODO: Create controlled components to re-use inputs
 
-  const onChangeTitle = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangeTitle = (e: React.FormEvent<HTMLInputElement>): void => {
     setCounterTitle(e.currentTarget.value)
   }
 
-  const onChangeHours = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangeHours = (e: React.FormEvent<HTMLInputElement>): void => {
     setCounterHours(Number(e.currentTarget.value))
   }
 
-  const onChangeMinutes = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangeMinutes = (e: React.FormEvent<HTMLInputElement>): void => {
     setCounterMinutes(Number(e.currentTarget.value))
   }
 
-  const onChangeSeconds = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangeSeconds = (e: React.FormEvent<HTMLInputElement>): void => {
     setCounterSeconds(Number(e.currentTarget.value))
+  }
+
+  const onSave = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    saveCounter({
+      title: counterTitle,
+      hours: counterHours,
+      minutes: counterMinutes,
+      seconds: counterSeconds
+    })
   }
 
   return (
@@ -120,7 +134,7 @@ export default function CounterForm({
         </label>
       </div>
       <div className="mt-4">
-        <SaveButton />
+        <SaveButton click={onSave} />
       </div>
     </form>
   )

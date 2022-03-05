@@ -1,7 +1,7 @@
 import Button from '../Button'
 import { Edit as EditIcon } from '../Icons'
 
-export default function EditButton({ click }) {
+export default function EditButton({ click }: { click: () => void }) {
   const onClick = () => {
     click()
   }

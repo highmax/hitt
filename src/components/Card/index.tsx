@@ -1,6 +1,6 @@
 type CardProps = {
   label: string
-  children: React.ReactComponentElement<any, any>
+  children: React.ReactNode
   classNames?: string
 }
 

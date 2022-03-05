@@ -1,15 +1,18 @@
+import { useState } from 'react'
+
 import CreateButton from '../CreateButton'
+import CounterForm from 'components/CounterForm'
 import Card from '../Card'
 import Counter from '../Counter'
 import Modal from '../Modal'
-import CounterForm from 'components/CounterForm'
 
-import { useState } from 'react'
+import { Counter as CounterModel } from 'models/counter'
 
 export default function CounterList() {
   const [isOpen, setIsOpen] = useState(false)
   const [editMode, setEditMode] = useState(false)
-  const [counterDetails, setCouterDetails] = useState({})
+  const [counter, setCouter] = useState<CounterModel>()
+  const [counterList, setCounterList] = useState<CounterModel[]>([])
 
   const createCounter = () => {
     setIsOpen(true)
@@ -20,21 +23,16 @@ export default function CounterList() {
     setIsOpen(false)
   }
 
-  const onEditCounter = ({
-    title,
-    hours,
-    minutes,
-    seconds
-  }: {
-    title: string
-    hours: number
-    minutes: number
-    seconds: number
-  }) => {
+  const onEditCounter = ({ title, hours, minutes, seconds }: CounterModel) => {
     setIsOpen(true)
     setEditMode(true)
 
-    setCouterDetails({ title, hours, minutes, seconds })
+    setCouter({ title, hours, minutes, seconds })
+  }
+
+  const onSaveCounter = ({ title, hours, minutes, seconds }: CounterModel) => {
+    setCounterList([{ title, hours, minutes, seconds }, ...counterList])
+    setIsOpen(false)
   }
 
   return (
@@ -43,12 +41,21 @@ export default function CounterList() {
         <div className="mt-2">
           <CreateButton click={createCounter} />
           <div className="p-4 mt-5 w-full h-auto bg-white rounded-md border border-slate-200">
-            <Counter
-              title="Push up"
-              minutes={1}
-              seconds={3}
-              onEdit={onEditCounter}
-            />
+            {counterList.map(({ title, hours, minutes, seconds }) => (
+              <Counter
+                key={`key-${title}`}
+                title={title}
+                hours={hours}
+                minutes={minutes}
+                seconds={seconds}
+                onEdit={onEditCounter}
+              />
+            ))}
+            {counterList.length <= 0 && (
+              <p className="text-sm text-center text-slate-400">
+                Counters will appear here once you create a new one
+              </p>
+            )}
           </div>
         </div>
       </Card>
@@ -57,7 +64,11 @@ export default function CounterList() {
         handleClose={closeModal}
         title={editMode ? 'Edit counter' : 'Create new counter'}
       >
-        <CounterForm editMode={editMode} details={counterDetails} />
+        <CounterForm
+          editMode={editMode}
+          details={counter}
+          saveCounter={onSaveCounter}
+        />
       </Modal>
     </>
   )

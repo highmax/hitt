@@ -56,30 +56,22 @@ export default function Timer({
   const almostFinishing = remmainingTime < 10 && running
 
   return (
-    <>
-      <Card classNames="w-4/5" label={label}>
-        <>
-          <div className="flex justify-between mb-4">
-            <Display
-              label="Hours"
-              time={hours}
-              almostFinish={almostFinishing}
-            />
-            <Display
-              label="Minutes"
-              time={minutos}
-              almostFinish={almostFinishing}
-            />
-            <Display
-              label="Seconds"
-              time={segundos}
-              almostFinish={almostFinishing}
-            />
-          </div>
-          <StartButton running={running} setRunning={setRunning} />
-          <ResetButton resetCountDown={resetCount} />
-        </>
-      </Card>
-    </>
+    <Card classNames="w-4/5" label={label}>
+      <div className="flex justify-between mb-4">
+        <Display label="Hours" time={hours} almostFinish={almostFinishing} />
+        <Display
+          label="Minutes"
+          time={minutos}
+          almostFinish={almostFinishing}
+        />
+        <Display
+          label="Seconds"
+          time={segundos}
+          almostFinish={almostFinishing}
+        />
+      </div>
+      <StartButton running={running} setRunning={setRunning} />
+      <ResetButton resetCountDown={resetCount} />
+    </Card>
   )
 }

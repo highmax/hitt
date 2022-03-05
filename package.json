@@ -1,16 +1,12 @@
 {
-  "name": "reactjs-vite-tailwindcss-boilerplate",
-  "description": "This is a React + vite boilerplate to be used with Tailwindcss.",
-  "version": "0.3.1",
+  "name": "hitt",
+  "description": "This is an app to organize custom hit routines. It is a work in progress and is not yet complete.",
+  "version": "0.0.1",
   "private": true,
   "author": {
-    "name": "João Paulo Moraes",
-    "email": "joaopaulomoraes@outlook.com",
-    "url": "https://github.com/joaopaulomoraes"
-  },
-  "bugs": {
-    "url": "https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate/issues",
-    "email": "joaopaulomoraes@outlook.com"
+    "name": "Alejandro Navarro Dimas",
+    "email": "alejandronavarrodimas@gmail.com",
+    "url": "https://github.com/highmax"
   },
   "scripts": {
     "dev": "vite",
