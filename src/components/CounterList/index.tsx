@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import CreateButton from '../CreateButton'
 import CounterForm from 'components/CounterForm'
@@ -8,12 +8,23 @@ import Modal from '../Modal'
 
 import { Counter as CounterModel } from 'models/counter'
 
-export default function CounterList() {
+export default function CounterList({
+  onChange
+}: {
+  onChange: (counter: CounterModel) => void
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const [editMode, setEditMode] = useState(false)
-  const [counter, setCouter] = useState<CounterModel>()
+  const [counter, setCounter] = useState<CounterModel>()
   const [counterList, setCounterList] = useState<CounterModel[]>([])
 
+  useEffect(() => {
+    if (counterList.length > 0) {
+      onChange(counterList[0])
+    }
+  }, [counterList, onChange])
+
+  //TODO: Disable button when timer is running, so you can't create counter when timer is running
   const createCounter = () => {
     setIsOpen(true)
     setEditMode(false)
@@ -23,16 +34,43 @@ export default function CounterList() {
     setIsOpen(false)
   }
 
-  const onEditCounter = ({ title, hours, minutes, seconds }: CounterModel) => {
+  const onEditCounter = ({
+    id,
+    title,
+    hours,
+    minutes,
+    seconds
+  }: CounterModel) => {
     setIsOpen(true)
     setEditMode(true)
 
-    setCouter({ title, hours, minutes, seconds })
+    setCounter({ id, title, hours, minutes, seconds })
   }
 
-  const onSaveCounter = ({ title, hours, minutes, seconds }: CounterModel) => {
-    setCounterList([{ title, hours, minutes, seconds }, ...counterList])
+  const onSaveCounter = ({
+    id,
+    title,
+    hours,
+    minutes,
+    seconds
+  }: CounterModel) => {
+    if (!editMode) {
+      const id = `${Date.now()}-${Math.floor(Math.random() * 100)}`
+      setCounterList([{ id, title, hours, minutes, seconds }, ...counterList])
+    } else {
+      setCounterList(
+        counterList.map((counter) => {
+          return counter.id === id
+            ? { id, title, hours, minutes, seconds }
+            : counter
+        })
+      )
+    }
     setIsOpen(false)
+  }
+
+  const onDeleteCounter = (id: string) => {
+    setCounterList(counterList.filter((counter) => counter.id !== id))
   }
 
   return (
@@ -41,14 +79,16 @@ export default function CounterList() {
         <div className="mt-2">
           <CreateButton click={createCounter} />
           <div className="p-4 mt-5 w-full h-auto bg-white rounded-md border border-slate-200">
-            {counterList.map(({ title, hours, minutes, seconds }) => (
+            {counterList.map(({ id, title, hours, minutes, seconds }) => (
               <Counter
-                key={`key-${title}`}
+                key={`key-${id}`}
+                id={id}
                 title={title}
                 hours={hours}
                 minutes={minutes}
                 seconds={seconds}
                 onEdit={onEditCounter}
+                onDelete={onDeleteCounter}
               />
             ))}
             {counterList.length <= 0 && (

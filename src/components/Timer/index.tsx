@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useInterval from '../../hooks/useInterval'
 
 import Display from '../Display'
@@ -7,26 +7,35 @@ import StartButton from '../StartButton'
 import ResetButton from '../ResetButton'
 
 type TimerProps = {
-  seg?: number
-  min?: number
-  hours?: number
-  label: string
+  currentCounter: {
+    title: string
+    hours: number
+    minutes: number
+    seconds: number
+  }
   running: boolean
   setRunning: React.Dispatch<React.SetStateAction<boolean>>
   resetCount: () => void
 }
 
 export default function Timer({
-  seg = 0,
-  min = 0,
-  hours = 0,
+  currentCounter = { title: '', hours: 0, minutes: 0, seconds: 0 },
   running = false,
   setRunning,
-  resetCount,
-  label
+  resetCount
 }: TimerProps) {
-  const [segundos, setSegundos] = useState(seg)
-  const [minutos, setMinutos] = useState(min)
+  const { seconds, minutes, hours, title } = currentCounter
+  const [titulo, setTitle] = useState<string>(title)
+  const [horas, setHoras] = useState<number>(hours)
+  const [minutos, setMinutos] = useState<number>(minutes)
+  const [segundos, setSegundos] = useState<number>(seconds)
+
+  useEffect(() => {
+    setTitle(title)
+    setHoras(hours)
+    setMinutos(minutes)
+    setSegundos(seconds)
+  }, [title, hours, minutes, seconds])
 
   const DELAY = 1000
 
@@ -52,13 +61,13 @@ export default function Timer({
     running ? DELAY : null
   )
 
-  const remmainingTime = hours * 3600 + minutos * 60 + segundos
+  const remmainingTime = horas * 3600 + minutos * 60 + segundos
   const almostFinishing = remmainingTime < 10 && running
 
   return (
-    <Card classNames="w-4/5" label={label}>
+    <Card classNames="w-4/5" label={titulo}>
       <div className="flex justify-between mb-4">
-        <Display label="Hours" time={hours} almostFinish={almostFinishing} />
+        <Display label="Hours" time={horas} almostFinish={almostFinishing} />
         <Display
           label="Minutes"
           time={minutos}

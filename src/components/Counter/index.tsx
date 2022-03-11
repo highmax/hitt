@@ -5,22 +5,30 @@ import DragButton from '../DragButton'
 import { Counter as CounterModel } from 'models/counter'
 
 type CounterProps = {
+  id: string
   title: string
   hours?: number
   minutes?: number
   seconds?: number
   onEdit: (d: CounterModel) => void
+  onDelete: (id: string) => void
 }
 
 export default function Counter({
   onEdit,
+  onDelete,
+  id,
   title,
   hours = 0,
   minutes = 0,
   seconds = 0
 }: CounterProps) {
   const onClickEditButton = () => {
-    onEdit({ title, hours, minutes, seconds })
+    onEdit({ id, title, hours, minutes, seconds })
+  }
+
+  const onClickDeleteButton = () => {
+    onDelete(id)
   }
 
   return (
@@ -39,7 +47,7 @@ export default function Counter({
       </div>
       <div className="ml-auto">
         <EditButton click={onClickEditButton} />
-        <DeleteButton />
+        <DeleteButton click={onClickDeleteButton} />
       </div>
     </div>
   )
